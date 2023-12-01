@@ -1,0 +1,46 @@
+- name: "Verificando acesso ao Satellite Master"
+  wait_for:
+    host: "{{ satellite_master }}"
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 5
+  ignore_errors: true
+  register: satellite_master_test
+  with_items:
+    - 80
+    - 443
+
+- name: "Preenchendo variavel para rede datacenter"
+  set_fact:
+    satellite: "{{ satellite_master }}"
+  when: satellite_master_test is succeeded
+
+- name: "Verificando acesso ao Satellite Capsule"
+  wait_for:
+    host: "{{ satellite_capsule }}"
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 5
+  ignore_errors: true
+  register: satellite_capsule_test
+  with_items:
+    - 80
+    - 443
+  when: satellite_master_test is failed
+
+- name: "Preenchendo variavel para rede corporativo"
+  set_fact:
+    satellite: "{{ satellite_capsule }}"
+  when: satellite_master_test is failed and satellite_capsule_test is succeeded
+
+
+- name: Desabilitando repositorios nao usados
+  shell: sed '/enabled/s/1/0/g' /etc/yum.repos.d/* -i
+
+- name: Copia arquivo de template
+  template:
+    src: repo{{ansible_distribution_major_version}}.j2
+    dest: /etc/yum.repos.d/inep.repo
+

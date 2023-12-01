@@ -1,0 +1,4 @@
+---
+# handlers file for install-server
+- name: restart host
+  shell: shutdown -r +1

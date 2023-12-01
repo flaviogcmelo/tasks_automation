@@ -1,0 +1,59 @@
+---
+- name: Habilita o multilib_policy em /etc/yum.conf
+  lineinfile:
+   path: /etc/yum.conf
+   regexp: '.*multilib_policy.*'
+   insertafter: '^installonly_limit.*'
+   line: 'multilib_policy=all'
+   backup: yes
+
+- name: Instalar pacotes do SO para OL7
+  yum: state=latest disable_gpg_check=yes  name="{{item}}"
+  loop: "{{ pacotes7 }}"
+  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version == "7"
+  tags: pacotesSO
+  ignore_errors: yes
+
+- name: Instalar pacotes do SO para OL8
+  yum: state=latest disable_gpg_check=yes  name="{{item}}"
+  loop: "{{ pacotes8 }}"
+  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version == "8"
+  tags: pacotesSO
+  ignore_errors: yes
+
+- name: Cria diretorio bd_srvs_comum em /home/
+  file: path=/home/bd_srvs_comum state=directory owner=oracle group=oinstall
+
+- name: Verifica se o storage está disponível
+  wait_for:
+    host: "{{interface_storage}}"
+    port: 2049
+    state: present
+    timeout: 10
+
+- name: Monta bd_srvs_comum e insere ponto de montagem no /etc/fstab
+  mount:
+    path: /home/bd_srvs_comum
+    src: "{{interface_storage}}:/bd_srvs_comum"
+    fstype: nfs
+    opts: "rw,bg,hard,suid,nointr,rsize=32768,wsize=32768,proto=tcp,actimeo=0,vers=3,timeo=600"
+    state: mounted
+
+- name: Instalar pacote OracleASM for OL7
+  yum: state=latest disable_gpg_check=yes  name="{{item}}"
+  with_items:
+    - oracleasm-support
+    - kmod-oracleasm
+    - /home/bd_srvs_comum/OraInstall/oracleasm_libs_OL7/oracleasmlib-2.0.12-1.el7.x86_64.rpm
+  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version == "7"
+
+- name: Instalar pacote OracleASM for OL8
+  yum: state=latest disable_gpg_check=yes  name="{{item}}"
+  with_items:
+    - /home/bd_srvs_comum/OraInstall/oracleasm_libs_OL8/oracleasm-support-2.1.12-1.el8.x86_64.rpm
+    - /home/bd_srvs_comum/OraInstall/oracleasm_libs_OL8/oracleasmlib-2.0.17-1.el8.x86_64.rpm
+  when: ansible_distribution == "OracleLinux" and ansible_distribution_major_version == "8"
+
+- name: Instalar Oracle RDBMS PreInstall
+  yum: state=latest disable_gpg_check=yes name=oracle-database-preinstall-19c
+

@@ -1,0 +1,40 @@
+[Oracle_Linux_8_BaseOS_Latest]
+name=Oracle Linux 8 BaseOS Latest
+baseurl=http://{{satellite}}/pulp/repos/INEP/Library/custom/Oracle_Enterprise_Linux/Oracle_Linux_8_BaseOS_Latest/
+enabled=1
+metadata_expire=7d
+repo_gpgcheck=0
+type=rpm
+gpgcheck=0
+skip_if_unavailable=True
+
+[Oracle_Linux_8_AppStream]
+name=Oracle Linux 8 Application Stream
+baseurl=http://{{satellite}}/pulp/content/INEP/Library/custom/Oracle_Enterprise_Linux/ol8_appstream/
+enabled=1
+metadata_expire=7d
+repo_gpgcheck=0
+type=rpm
+gpgcheck=0
+skip_if_unavailable=True
+
+[Oracle_Linux_8_CodeReady_Builder]
+name=Oracle Linux 8 CodeReady Builder
+baseurl=http://{{satellite}}/pulp/content/INEP/Library/custom/Oracle_Enterprise_Linux/ol8_codeready_builder/
+enabled=1
+metadata_expire=7d
+repo_gpgcheck=0
+type=rpm
+gpgcheck=0
+skip_if_unavailable=True
+
+[Oracle_Linux_8_x86_64_UEK_Release_7]
+name=Oracle Linux 8 (x86_64) UEK Release 7
+baseurl=http://{{satellite}}/pulp/content/INEP/Library/custom/Oracle_Enterprise_Linux/Oracle_Linux_8_x86_64_UEK_Release_7/
+enabled=1
+metadata_expire=7d
+repo_gpgcheck=0
+type=rpm
+gpgcheck=0
+skip_if_unavailable=True
+

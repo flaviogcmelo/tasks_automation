@@ -1,0 +1,46 @@
+---
+- name: Criar diretorio
+  file: 
+    path: "{{item}}"
+    owner: root
+    group: root
+    state: directory
+  with_list: 
+    - /etc/opt/DynamicLinkManager
+    - /media/cdrom
+
+- name: Copia arquivo dlm.lic_key
+  copy:
+    src: dlm.lic_key
+    dest: /etc/opt/DynamicLinkManager/
+
+- name: Copia arquivo de licenca do HDLM
+  copy:
+    src: "/home/bd_srvs_comum/hitachi/hdlm/G1500/HDSVSP G1000SN20802RPROD-103 05-29-2019 123535492 PM.plk"
+    dest: /var/tmp/hdlm_license
+    remote_src: true
+
+- name: Monta ISO com a licenca do HDLM
+  mount:  
+    path: /media/cdrom
+    src: /home/bd_srvs_comum/hitachi/hdlm/DLMGLMforHDS_087801.iso
+    fstype: iso9660
+    opts: ro,noauto
+    state: mounted
+
+- name: Realiza a instalacao do driver e licenca
+  shell: /media/cdrom/installux.sh 
+    expect "Is this OK ?"
+    send "y"
+  register: resultado
+  args:
+    executable: /usr/bin/expect
+
+- name: Resultado da Instalacao
+  debug:
+    var: resultado.stdout_lines
+
+- name: Desmonta o volume cdrom
+  mount:
+    path: /media/cdrom
+    state: absent

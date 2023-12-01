@@ -1,0 +1,17 @@
+---
+- hosts: all
+  
+  roles:
+    - role: satelliteRegister-oracle
+      when: ansible_distribution=="OracleLinux"
+
+    - role: install-server
+      when: ansible_distribution=="OracleLinux"
+
+    - role: install-packages-19c
+      when: ansible_distribution=="OracleLinux"
+      tags: install_packages
+
+    - role: install-hdlm
+      when: '"VMware" not in ansible_product_name'
+      tags: install_hdlm
