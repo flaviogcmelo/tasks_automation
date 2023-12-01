@@ -1,0 +1,11 @@
+## Still devoloping
+## Tasks to be develped and added to the main installation project
+## 1. User criation
+## 2. SSH Key copy for user oracle
+## 3. Generate /etc/hosts file base on host facts
+
+##
+##- name: Adiciona chave público no arquivo "authorized_keys"
+##  authorized_keys: user=root
+##                   exclusive=no
+##                   key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
