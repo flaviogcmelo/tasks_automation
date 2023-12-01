@@ -1,2 +1,17 @@
 
+[rede2915]
+#nilopolis1
 
+[rede2912]
+pirai1
+#pirai2
+#pirai3
+#pirai4
+
+[hosts-oracle]
+#172.29.15.136
+#172.29.15.41 
+#172.29.15.251
+#172.29.13.133
+nilopolis1
+#carapebus1.dmzinep.gov.br ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
