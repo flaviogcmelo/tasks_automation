@@ -16,8 +16,5 @@ date
 sqlplus / as sysdba <<script
 alter session set container=$2;
 
-
-
-
 script
 done
