@@ -18,7 +18,6 @@ run{
     crosscheck archivelog all;
     backup archivelog all delete input;
     crosscheck archivelog all;
-    delete noprompt obsolete;
 }
 eof
 done
